@@ -36,6 +36,3 @@ WORKDIR /home/testuser/dotfiles
 # Copy dotfiles repository
 COPY --chown=testuser:testuser . /home/testuser/dotfiles/
 
-# Use systemd as the entry point
-STOPSIGNAL SIGRTMIN+3
-CMD ["/lib/systemd/systemd", "--system"]
