@@ -21,15 +21,20 @@ RUN curl -fsSL https://deb.nodesource.com/setup_current.x | bash - \
     && npm install -g npm@latest \
     && rm -rf /var/lib/apt/lists/*
 
+
 # Create a test user
 RUN useradd -m -s /bin/zsh testuser
 USER testuser
 WORKDIR /home/testuser
 
-# Copy dotfiles repository
-COPY --chown=testuser:testuser . /home/testuser/dotfiles/
+# chezmoi dotfile manager
+USER testuser
+WORKDIR /home/testuser/
+RUN sh -c "$(curl -fsLS get.chezmoi.io)"
 
 WORKDIR /home/testuser/dotfiles
+# Copy dotfiles repository
+COPY --chown=testuser:testuser . /home/testuser/dotfiles/
 
 # Use systemd as the entry point
 STOPSIGNAL SIGRTMIN+3
