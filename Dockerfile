@@ -4,7 +4,7 @@ RUN echo 'APT::Install-Suggests "0";' >> /etc/apt/apt.conf.d/00-docker
 RUN echo 'APT::Install-Recommends "0";' >> /etc/apt/apt.conf.d/00-docker
 
 ENV DEBIAN_FRONTEND=noninteractive
-# Install basic utilities and add emacs-snapshot repository
+
 RUN apt-get update && apt-get install -y \
     git \
     make \

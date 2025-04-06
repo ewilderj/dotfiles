@@ -1,4 +1,4 @@
-.PHONY: container test clean interactive
+PHONY: container test clean interactive
 
 IMAGE_NAME = dotfiles-test
 
@@ -7,10 +7,10 @@ container: Dockerfile
 	podman build -t $(IMAGE_NAME) .
 
 test: container
-	podman run --rm --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:rw $(IMAGE_NAME) make -C tests test
+	podman run --rm $(IMAGE_NAME) make -C tests test
 
 interactive: container
-	podman run --rm -it --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:rw $(IMAGE_NAME) /bin/zsh
+	podman run --rm -it $(IMAGE_NAME) /bin/zsh
 
 clean:
 	podman rmi $(IMAGE_NAME) || true
