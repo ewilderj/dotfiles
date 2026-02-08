@@ -1,0 +1,13 @@
+# Ghostty terminal configuration
+
+theme = dracula
+font-family = FiraCode Nerd Font
+font-size = 14
+
+# Window chrome
+window-padding-x = 4
+window-padding-y = 4
+window-decoration = auto
+
+# Tab bar
+gtk-tabs-location = top

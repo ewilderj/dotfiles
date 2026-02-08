@@ -1,0 +1,24 @@
+[[ "$TERM_PROGRAM" == "vscode" ]] && command -v code-insiders &>/dev/null && . "$(code-insiders --locate-shell-integration-path zsh)"
+
+# History configuration
+HISTSIZE=10000
+SAVEHIST=10000
+HISTFILE=~/.zsh_history
+setopt SHARE_HISTORY HIST_IGNORE_DUPS HIST_IGNORE_SPACE
+
+# Completion system
+autoload -Uz compinit && compinit
+
+# Set emacsclient as the default editor
+export EDITOR="emacsclient -c -a ''"
+export VISUAL="emacsclient -c -a ''"
+
+# Handy aliases
+alias e="emacsclient -c -a ''"
+alias et="emacsclient -t -a ''"
+
+# Ghostty tab coloring (project dirs + SSH hosts)
+[[ -f ~/.config/ghostty-colors.zsh ]] && source ~/.config/ghostty-colors.zsh
+
+# Machine-local overrides (not in version control)
+[[ -f ~/.zshrc-local ]] && source ~/.zshrc-local
