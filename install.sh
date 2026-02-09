@@ -21,12 +21,18 @@ echo
 
 link "$DOTFILES/zsh/zshrc"              "$HOME/.zshrc"
 link "$DOTFILES/zsh/ghostty-colors.zsh" "$HOME/.config/ghostty-colors.zsh"
+link "$DOTFILES/bash/bashrc"            "$HOME/.bashrc"
+link "$DOTFILES/bash/ghostty-colors.bash" "$HOME/.config/ghostty-colors.bash"
 link "$DOTFILES/ghostty/config"         "$HOME/.config/ghostty/config"
 
-# Create zshrc-local if it doesn't exist (machine-specific, not tracked)
 if [[ ! -f "$HOME/.zshrc-local" ]]; then
   echo "# Machine-local zsh configuration (not version controlled)" > "$HOME/.zshrc-local"
   echo "  created ~/.zshrc-local (edit for local overrides)"
+fi
+
+if [[ ! -f "$HOME/.bashrc-local" ]]; then
+  echo "# Machine-local bash configuration (not version controlled)" > "$HOME/.bashrc-local"
+  echo "  created ~/.bashrc-local (edit for local overrides)"
 fi
 
 echo

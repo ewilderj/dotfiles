@@ -5,8 +5,9 @@ Personal shell and terminal configuration.
 ## What's here
 
 - **zsh/zshrc** — main zsh config (history, completion, editor, aliases)
-- **zsh/ghostty-colors.zsh** — auto-tints Ghostty tabs by project directory
-  or SSH host using deterministic color hashing
+- **zsh/ghostty-colors.zsh** — auto-tints Ghostty tabs (zsh version)
+- **bash/bashrc** — main bash config (git prompt, editor, aliases)
+- **bash/ghostty-colors.bash** — auto-tints Ghostty tabs (bash version)
 - **ghostty/config** — Ghostty terminal config (Dracula theme, FiraCode Nerd Font)
 
 ## Install
