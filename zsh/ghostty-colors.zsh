@@ -47,8 +47,8 @@ typeset -a _GTC_SSH_COLORS=(
 _GTC_DEFAULT_BG="#282a36"  # Dracula default
 
 # Colored circle emojis — indexed by hash to visually match the tint
-typeset -a _GTC_PROJECT_DOTS=( 🔵 🟢 🟣 🟤 🟡 🔵 🟢 🟡 🟣 🔵 🟤 🟢 )
-typeset -a _GTC_SSH_DOTS=(    🔴 🟠 🟠 🔴 🟡 🔴 🟠 🔴 )
+typeset -a _GTC_PROJECT_DOTS=( 🔷 🍀 🔮 🌰 ⭐ 💎 🌿 🌕 🪻 🧊 🎯 🍃 )
+typeset -a _GTC_SSH_DOTS=(    🔥 🍊 🌅 🌹 🌻 🍒 🥧 ♦️ )
 
 # Track current context so precmd can re-assert the title
 _GTC_CURRENT_TITLE=""

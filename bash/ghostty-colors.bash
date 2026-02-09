@@ -27,8 +27,8 @@ _GTC_SSH_COLORS=(
   "#352c1e"  "#2d1e1e"  "#352d24"  "#351e1e"
 )
 
-_GTC_PROJECT_DOTS=( 🔵 🟢 🟣 🟤 🟡 🔵 🟢 🟡 🟣 🔵 🟤 🟢 )
-_GTC_SSH_DOTS=(    🔴 🟠 🟠 🔴 🟡 🔴 🟠 🔴 )
+_GTC_PROJECT_DOTS=( 🔷 🍀 🔮 🌰 ⭐ 💎 🌿 🌕 🪻 🧊 🎯 🍃 )
+_GTC_SSH_DOTS=(    🔥 🍊 🌅 🌹 🌻 🍒 🥧 ♦️ )
 
 _GTC_DEFAULT_BG="#282a36"
 _GTC_CURRENT_TITLE=""
