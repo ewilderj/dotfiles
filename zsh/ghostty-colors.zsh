@@ -42,11 +42,18 @@ typeset -a _GTC_SSH_COLORS=(
 
 _GTC_DEFAULT_BG="#282a36"  # Dracula default
 
+# Colored circle emojis — indexed by hash to visually match the tint
+typeset -a _GTC_PROJECT_DOTS=( 🔵 🟢 🟣 🟤 🟡 🔵 🟢 🟡 🟣 🔵 🟤 🟢 )
+typeset -a _GTC_SSH_DOTS=(    🔴 🟠 🟠 🔴 🟡 🔴 🟠 🔴 )
+
+# Track current context so precmd can re-assert the title
+_GTC_CURRENT_TITLE=""
+_GTC_SSH_ACTIVE=""
+
 # ---------------------------------------------------------------------------
 # Internals
 # ---------------------------------------------------------------------------
 
-# Deterministic hash of a string → integer
 _gtc_hash() {
   local s="$1" h=0 i
   for (( i=0; i<${#s}; i++ )); do
@@ -55,16 +62,28 @@ _gtc_hash() {
   echo $h
 }
 
-# Set background color and tab title via OSC escape sequences
+# Shorten ~/git/foo/bar/baz → foo/bar/baz ; ~/other → ~/other
+_gtc_short_cwd() {
+  if [[ "$PWD" == "$HOME/git/"* ]]; then
+    echo "${PWD#$HOME/git/}"
+  elif [[ "$PWD" == "$HOME"* ]]; then
+    echo "~${PWD#$HOME}"
+  else
+    echo "$PWD"
+  fi
+}
+
 _gtc_set() {
   printf '\033]11;%s\007' "$1"
   printf '\033]2;%s\007' "$2"
+  _GTC_CURRENT_TITLE="$2"
 }
 
-# Reset to Dracula default
 _gtc_reset() {
+  local title="$(_gtc_short_cwd)"
   printf '\033]11;%s\007' "$_GTC_DEFAULT_BG"
-  printf '\033]2;\007'
+  printf '\033]2;%s\007' "$title"
+  _GTC_CURRENT_TITLE="$title"
 }
 
 # ---------------------------------------------------------------------------
@@ -72,14 +91,26 @@ _gtc_reset() {
 # ---------------------------------------------------------------------------
 
 _gtc_chpwd() {
+  [[ -n "$_GTC_SSH_ACTIVE" ]] && return
   if [[ "$PWD" == "$HOME/git/"* ]]; then
     local project="${PWD#$HOME/git/}"
     project="${project%%/*}"
+    local subpath="$(_gtc_short_cwd)"
     local idx=$(( $(_gtc_hash "$project") % ${#_GTC_PROJECT_COLORS[@]} + 1 ))
-    _gtc_set "${_GTC_PROJECT_COLORS[$idx]}" "📁 $project"
+    local dot="${_GTC_PROJECT_DOTS[$idx]}"
+    _gtc_set "${_GTC_PROJECT_COLORS[$idx]}" "$dot $subpath"
   else
     _gtc_reset
   fi
+}
+
+# ---------------------------------------------------------------------------
+# precmd — re-assert title before every prompt so running programs
+# (gh copilot, etc.) can't permanently overwrite it
+# ---------------------------------------------------------------------------
+
+_gtc_precmd() {
+  [[ -n "$_GTC_CURRENT_TITLE" ]] && printf '\033]2;%s\007' "$_GTC_CURRENT_TITLE"
 }
 
 # ---------------------------------------------------------------------------
@@ -101,12 +132,15 @@ ssh() {
   if [[ -n "$host" ]]; then
     local short="${host%%.*}"
     local idx=$(( $(_gtc_hash "$short") % ${#_GTC_SSH_COLORS[@]} + 1 ))
-    _gtc_set "${_GTC_SSH_COLORS[$idx]}" "🖥 $short"
+    local dot="${_GTC_SSH_DOTS[$idx]}"
+    _GTC_SSH_ACTIVE="$short"
+    _gtc_set "${_GTC_SSH_COLORS[$idx]}" "$dot $short"
   fi
 
   command ssh "$@"
   local ret=$?
-  _gtc_chpwd   # restore project color or default
+  _GTC_SSH_ACTIVE=""
+  _gtc_chpwd
   return $ret
 }
 
@@ -116,4 +150,5 @@ ssh() {
 
 autoload -Uz add-zsh-hook
 add-zsh-hook chpwd _gtc_chpwd
+add-zsh-hook precmd _gtc_precmd
 _gtc_chpwd
