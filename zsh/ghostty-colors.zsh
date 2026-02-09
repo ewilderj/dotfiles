@@ -83,8 +83,15 @@ _gtc_set() {
   _GTC_CURRENT_TITLE="$2"
 }
 
+# Prefix for tab titles — includes hostname when in an SSH session
+if [[ -n "$SSH_CONNECTION" ]]; then
+  _GTC_HOST_PREFIX="${HOST%%.*}: "
+else
+  _GTC_HOST_PREFIX=""
+fi
+
 _gtc_reset() {
-  local title="$(_gtc_short_cwd)"
+  local title="${_GTC_HOST_PREFIX}$(_gtc_short_cwd)"
   printf '\033]11;%s\007' "$_GTC_DEFAULT_BG"
   printf '\033]2;%s\007' "$title"
   _GTC_CURRENT_TITLE="$title"
@@ -102,7 +109,7 @@ _gtc_chpwd() {
     local subpath="$(_gtc_short_cwd)"
     local idx=$(( $(_gtc_hash "$project") % ${#_GTC_PROJECT_COLORS[@]} + 1 ))
     local dot="${_GTC_PROJECT_DOTS[$idx]}"
-    _gtc_set "${_GTC_PROJECT_COLORS[$idx]}" "$dot $subpath"
+    _gtc_set "${_GTC_PROJECT_COLORS[$idx]}" "$dot ${_GTC_HOST_PREFIX}$subpath"
   else
     _gtc_reset
   fi
