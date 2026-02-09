@@ -6,7 +6,11 @@
 #
 # Only activates inside Ghostty.
 
-[[ -z "$GHOSTTY_RESOURCES_DIR" ]] && return
+# Activate in Ghostty (local) or any capable terminal (remote/SSH)
+case "$TERM" in
+  xterm-ghostty|xterm*|screen*|tmux*) ;;
+  *) [[ -z "$GHOSTTY_RESOURCES_DIR" ]] && return ;;
+esac
 
 # ---------------------------------------------------------------------------
 # Palette — subtle dark tints that pair well with Dracula
