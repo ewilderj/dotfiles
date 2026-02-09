@@ -9,5 +9,5 @@ window-padding-x = 4
 window-padding-y = 4
 window-decoration = auto
 
-# Tab bar
-gtk-tabs-location = top
+# Let our zsh hooks control tab titles (not Ghostty's built-in)
+shell-integration-features = no-title
