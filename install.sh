@@ -25,6 +25,11 @@ link "$DOTFILES/bash/bashrc"            "$HOME/.bashrc"
 link "$DOTFILES/bash/ghostty-colors.bash" "$HOME/.config/ghostty-colors.bash"
 link "$DOTFILES/ghostty/config"         "$HOME/.config/ghostty/config"
 
+# SSH config (macOS only — uses 1Password agent)
+if [[ "$(uname)" == "Darwin" ]]; then
+  link "$DOTFILES/ssh/config"           "$HOME/.ssh/config"
+fi
+
 if [[ ! -f "$HOME/.zshrc-local" ]]; then
   echo "# Machine-local zsh configuration (not version controlled)" > "$HOME/.zshrc-local"
   echo "  created ~/.zshrc-local (edit for local overrides)"
