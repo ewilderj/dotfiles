@@ -90,6 +90,25 @@ _gtc_prompt() {
     project="${project%%/*}"
     local subpath
     subpath="$(_gtc_short_cwd)"
+
+    # Worktree detection: resolve to main repo's project name
+    local wt_branch=""
+    local project_root="$HOME/git/$project"
+    if [[ -f "$project_root/.git" ]]; then
+      local gitdir
+      gitdir="$(< "$project_root/.git")"
+      gitdir="${gitdir#gitdir: }"
+      local main_git="${gitdir%/worktrees/*}"
+      local main_repo="${main_git%.git}"
+      main_repo="${main_repo%/}"
+      if [[ "$main_repo" == "$HOME/git/"* ]]; then
+        wt_branch="$(git -C "$project_root" rev-parse --abbrev-ref HEAD 2>/dev/null)"
+        project="${main_repo#$HOME/git/}"
+        project="${project%%/*}"
+        subpath="$project ⑂ $wt_branch"
+      fi
+    fi
+
     local h idx dot
     h=$(_gtc_hash "$project")
     idx=$(( h % ${#_GTC_PROJECT_COLORS[@]} ))

@@ -107,6 +107,27 @@ _gtc_chpwd() {
     local project="${PWD#$HOME/git/}"
     project="${project%%/*}"
     local subpath="$(_gtc_short_cwd)"
+
+    # Worktree detection: resolve to main repo's project name
+    local wt_branch=""
+    local project_root="$HOME/git/$project"
+    if [[ -f "$project_root/.git" ]]; then
+      # .git is a file → this is a worktree; resolve the main repo
+      local gitdir
+      gitdir="$(< "$project_root/.git")"
+      gitdir="${gitdir#gitdir: }"
+      # gitdir is like /path/to/main-repo/.git/worktrees/<name>
+      local main_git="${gitdir%/worktrees/*}"
+      local main_repo="${main_git%.git}"
+      main_repo="${main_repo%/}"
+      if [[ "$main_repo" == "$HOME/git/"* ]]; then
+        wt_branch="$(git -C "$project_root" rev-parse --abbrev-ref HEAD 2>/dev/null)"
+        project="${main_repo#$HOME/git/}"
+        project="${project%%/*}"
+        subpath="$project ⑂ $wt_branch"
+      fi
+    fi
+
     local idx=$(( $(_gtc_hash "$project") % ${#_GTC_PROJECT_COLORS[@]} + 1 ))
     local dot="${_GTC_PROJECT_DOTS[$idx]}"
     _gtc_set "${_GTC_PROJECT_COLORS[$idx]}" "$dot ${_GTC_HOST_PREFIX}$subpath"
