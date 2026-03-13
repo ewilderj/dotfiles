@@ -22,3 +22,11 @@ alias et="emacsclient -t -a ''"
 
 # Machine-local overrides (not in version control)
 [[ -f ~/.zshrc-local ]] && source ~/.zshrc-local
+export EPD_ZG_CONFIG=~/.epd-zg/config.yaml
+export PATH=$PATH:/Users/ewilderj/.cargo/bin
+
+# raspi4 VNC (SSH tunnel + TigerVNC)
+raspi4-vnc() {
+  ssh -fN -L 5900:localhost:5900 edd@raspi4 2>/dev/null
+  vncviewer localhost:5900
+}
